@@ -1,3 +1,4 @@
+import { resourceLimits } from "worker_threads";
 import products from "../models/models";
 import queryRequest from "../types/index";
 import { Request, Response } from "express";
@@ -56,4 +57,9 @@ const getProductByQuery = (req: Request) => {
   return data;
 };
 
-export default getProductByQuery;
+const createProduct = async (product: Object) => {
+  const createdProduct = await products.create(product);
+  return createdProduct;
+};
+
+export { getProductByQuery, createProduct };
