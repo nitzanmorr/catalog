@@ -20,8 +20,15 @@ router.post(
   "/create_product",
   newProductValidateChain,
   async (req: Request, res: Response) => {
-    const created = await createProduct(req.body);
-    res.send(JSON.stringify(created));
-    console.log(`Product added to table at ${new Date().toJSON()}`);
+    try {
+      console.log(req.body);
+      const created = await createProduct(req.body);
+      res.send(JSON.stringify(created));
+      console.log(`Product added to table at ${new Date().toJSON()}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
+
+export default router;

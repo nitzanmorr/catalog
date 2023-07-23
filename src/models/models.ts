@@ -8,7 +8,7 @@ const products = sq.define("products", {
   bounding_polygon: { type: DataTypes.GEOMETRY("POLYGON", 4326) },
   consumtion_link: { type: DataTypes.TEXT },
   type: {
-    type: DataTypes.ENUM("raster", "rasterized vector", "3d tiles", "QMesh"),
+    type: DataTypes.ENUM({values: ["raster", "rasterized vector", "3d tiles", "QMesh"]}),
   },
   consumption_protocol: {
     type: DataTypes.ENUM("WMS", "WMTS", "XYZ", "3D Tiles"),

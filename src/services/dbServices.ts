@@ -58,8 +58,12 @@ const getProductByQuery = (req: Request) => {
 };
 
 const createProduct = async (product: Object) => {
-  const createdProduct = await products.create(product);
-  return createdProduct;
+  try {
+    const createdProduct = await products.create(product);
+    return createdProduct;
+  } catch (error) {
+    return error;
+  }
 };
 
 export { getProductByQuery, createProduct };

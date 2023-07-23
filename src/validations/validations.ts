@@ -24,11 +24,11 @@ const queryValidateChain = [
     .withMessage("resolution_best has to be a number"),
   query("min_zoom.*")
     .optional()
-    .isInteger()
+    .isInt()
     .withMessage("min_zoom has to be an integer"),
   query("max_zoom.*")
     .optional()
-    .isInteger()
+    .isInt()
     .withMessage("max_zoom has to be an integer"),
 ];
 
@@ -95,14 +95,14 @@ const newProductValidateChain = [
     .not()
     .isEmpty()
     .withMessage("min_zoom cannot be empty")
-    .isInteger()
+    .isInt()
     .withMessage("min_zoom has to be an integer"),
   body("max_zoom")
     .exists()
     .not()
     .isEmpty()
     .withMessage("max_zoom cannot be empty")
-    .isInteger()
+    .isInt()
     .withMessage("max_zoom has to be an integer"),
 ];
 
