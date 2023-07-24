@@ -5,15 +5,20 @@ import {
   queryValidateChain,
   newProductValidateChain,
 } from "../validations/validations";
-import { createProduct } from "../services/dbServices";
+import { createProduct, getProductByQuery } from "../services/dbServices";
+import bodyParser from "body-parser";
 
 const router = Router();
-router.use(express.json());
+router.use(bodyParser.json());
 
 router.post(
-  "/get_product",
+  "/get_products",
   queryValidateChain,
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    console.log("Querying products");
+    const result: Object = getProductByQuery(req);
+    res.send(JSON.stringify(result));
+  }
 );
 
 router.post(
