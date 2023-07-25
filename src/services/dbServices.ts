@@ -2,7 +2,8 @@ import { resourceLimits } from "worker_threads";
 import products from "../models/models";
 import queryRequest from "../types/index";
 import { Request, Response } from "express";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
+import { type } from "os";
 
 const numberOps: Record<string, any> = {
   gt: Op.gt,
@@ -45,15 +46,16 @@ const getProductByQuery = (req: Request) => {
 
   //Iterate through the properties in the query
   for (const [key, value] of Object.entries(query)) {
-    if (propertiesForQuery[key] === "number") {
-      for (let [opKey, opVal] of Object.entries(value)) {
-        const op = numberOps[opKey];
-        operators.push({ key: { [op]: opVal } });
-      }
+    // if (propertiesForQuery[key] === "number") {
+    for (let [opKey, opVal] of Object.entries(value)) {
+      const op = numberOps[opKey];
+      operators.push({ [key]: { [op]: opVal } });
+      console.log(`Pushed ${key}: {${opKey}: ${opVal}}`);
     }
+    // }
   }
 
-  const data = products.findAll({ [Op.and]: operators });
+  const data = products.findAll({ where: operators });
   return data;
 };
 

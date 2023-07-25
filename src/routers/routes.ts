@@ -16,8 +16,13 @@ router.post(
   queryValidateChain,
   async (req: Request, res: Response) => {
     console.log("Querying products");
-    const result: Object = getProductByQuery(req);
-    res.send(JSON.stringify(result));
+    console.log(req.query);
+    try {
+      const result: Object = await getProductByQuery(req);
+      res.send(JSON.stringify(result));
+    } catch (error) {
+      console.error(error);
+    }
   }
 );
 
