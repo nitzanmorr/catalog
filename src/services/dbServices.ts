@@ -4,6 +4,8 @@ import queryRequest from "../types/index";
 import { Request, Response } from "express";
 import { Op, where } from "sequelize";
 import { type } from "os";
+import Sequelize from "sequelize";
+import { Fn } from "sequelize/types/utils";
 
 const numberOps: Record<string, any> = {
   gt: Op.gt,
@@ -29,6 +31,27 @@ const propertiesForQuery: Record<string, string> = {
   resolution_best: "number",
   min_zoom: "number",
   max_zoom: "number",
+  contains: "geo",
+  within: "geo",
+  intersects: "geo",
+};
+
+type QueryBody = {
+  operator: string;
+  polygon: string;
+};
+
+const geoQueryHandler = (body: Array<QueryBody>) => {
+  let operators: Array<Fn> = [];
+  for (const record of body) {
+    operators.push(
+      Sequelize.fn(
+        record.operator,
+        Sequelize.col("bounding_polygon"),
+        record.polygon
+      )
+    );
+  }
 };
 
 // url/?min_zoom[gt]=3&min_zoom[lt]=5&name[eq]="dsad"
@@ -40,12 +63,21 @@ const propertiesForQuery: Record<string, string> = {
 //   }
 // }
 
+//body:
+// [
+// {"operator": "contains",
+//  "polygon": {"type": "Polygon", "coordinates": [[[1, 2], [3, 4], [5, 6], [1, 2]]]}
+//}
+// ]
+
 const getProductByQuery = (req: Request) => {
   const query: QueryParam = req.query as QueryParam;
   let operators: Object[] = [];
 
   //Iterate through the properties in the query
   for (const [key, value] of Object.entries(query)) {
+    if (propertiesForQuery[key] === "geo") {
+    }
     // if (propertiesForQuery[key] === "number") {
     for (let [opKey, opVal] of Object.entries(value)) {
       const op = numberOps[opKey];
