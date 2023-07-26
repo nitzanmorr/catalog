@@ -7,15 +7,19 @@ import {
 } from "../validations/validations";
 import { createProduct, getProductByQuery } from "../services/dbServices";
 import bodyParser from "body-parser";
-import { validationResult } from "express-validator";
+import { validationResult, Result, ValidationError } from "express-validator";
 
 const router = Router();
 router.use(bodyParser.json());
 
 router.post(
   "/get_products",
-  queryValidateChain(),
+  queryValidateChain,
   async (req: Request, res: Response) => {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     console.log("Querying products");
     console.log(req.query);
     try {
@@ -31,7 +35,7 @@ router.post(
   "/create_product",
   newProductValidateChain,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
+    const errors: Result<ValidationError> = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
