@@ -43,7 +43,8 @@ router.post(
       console.log(req.body);
       const created = await createProduct(req.body);
       res.send(JSON.stringify(created));
-      console.log(`Product added to table at ${new Date().toJSON()}`);
+      if (created instanceof Error) console.log(created);
+      else console.log(`Product added to table at ${new Date().toJSON()}`);
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,7 @@
-import { query, body } from "express-validator";
+import { query, body, ValidationChain } from "express-validator";
+import { TupleType } from "typescript";
 
-const queryValidateChain = [
+const queryValidateChain: ValidationChain[] = [
   query("name")
     .optional()
     .custom((value: Object) => {
@@ -76,8 +77,7 @@ const queryValidateChain = [
       "min_zoom field only takes operators 'eq', 'gt', 'gte', 'lt', 'lte'"
     ),
   query("min_zoom.*")
-    .exists({ checkNull: true })
-    // .optional()
+    .optional()
     .isInt()
     .withMessage("min_zoom has to be an integer"),
   query("max_zoom")
@@ -97,9 +97,16 @@ const queryValidateChain = [
     .optional()
     .isInt()
     .withMessage("max_zoom has to be an integer"),
+  body("*.operator")
+    .optional()
+    .toLowerCase()
+    .isIn(["contains", "within", "intersects"])
+    .withMessage(
+      "operator field has to be one of the following: 'contains', 'within', 'intersects'"
+    ),
 ];
 
-const newProductValidateChain = [
+const newProductValidateChain: ValidationChain[] = [
   body("name")
     .exists()
     .not()
@@ -116,7 +123,26 @@ const newProductValidateChain = [
     .withMessage("description cannot be empty")
     .isString()
     .withMessage("description has to be string"),
-  //bounding_polygon
+  body("bounding_polygon")
+    .exists()
+    .not()
+    .isEmpty()
+    .withMessage("bounding_polygon cannot be empty")
+    .isObject()
+    .custom((data: Object) => {
+      const keys = Object.keys(data);
+      type dataKey = keyof typeof data;
+      if (
+        data["type" as dataKey].toString().toLowerCase() !==
+        ("polygon" as typeof data)
+      ) {
+        return false;
+      }
+      return true;
+    })
+    .withMessage(
+      "field bounding_polygon has to be a valid geojson polygon ('type' has to be 'polygon')"
+    ),
   body("consumtion_link")
     .exists()
     .not()
