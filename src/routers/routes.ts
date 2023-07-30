@@ -24,7 +24,7 @@ router.post(
     console.log(req.query);
     try {
       const result: Object = await getProductByQuery(req);
-      res.send(JSON.stringify(result));
+      res.send(result);
     } catch (error) {
       console.error(error);
     }
@@ -42,7 +42,7 @@ router.post(
     try {
       console.log(req.body);
       const created = await createProduct(req.body);
-      res.send(JSON.stringify(created));
+      res.send(created);
       if (created instanceof Error) console.log(created);
       else console.log(`Product added to table at ${new Date().toJSON()}`);
     } catch (error) {

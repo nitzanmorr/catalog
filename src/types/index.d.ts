@@ -14,4 +14,19 @@ interface queryRequest extends JSON {
   max_zoom: Number;
 }
 
+type QueryParam = {
+  name?: Record<string, string>;
+  type?: Record<string, string>;
+  consumption_protocol?: Record<string, string>;
+  resolution_best?: Record<string, string>;
+  min_zoom?: Record<string, number>;
+  max_zoom?: Record<string, number>;
+};
+
+type QueryBody = {
+  operator: string;
+  polygon: string;
+};
+
 export default queryRequest;
+export {QueryParam, QueryBody}
