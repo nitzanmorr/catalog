@@ -59,8 +59,6 @@ const createProduct = async (product: Object) => {
   }
 };
 
-const getProductById = (id: number) => {
-  
-}
+const getProductById = (id: number) => {};
 
 export { getProductByQuery, createProduct };
